@@ -1,0 +1,18 @@
+Bid
+├── when the current price is above the floor price
+│   ├── when passing a price higher than the current price
+│   │   ├── it should settle the auction
+│   │   ├── it should transfer the token being sold to the bidder
+│   │   ├── it should transfer the accepted token to the seller
+│   │   └── it should emit an AuctionSettled event
+│   └── when passing a price lower than the current price
+│       └── it should revert
+├── when the current price is less than the floor price
+│   ├── when passing a price above the floor price
+│   │   └── it should settle the auction on the floor price
+│   └── when passing a price less than the floor price
+│       └── it should revert
+├── when trying to bid on a settled auction
+│   └── it should revert
+└── when trying to bid on an auction that has expired
+    └── it should revert

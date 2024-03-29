@@ -1,0 +1,24 @@
+Constructor
+├── when passing correct arguments
+│   ├── it should deploy the contract
+│   ├── it should set the accepted token
+│   ├── it should set the token being sold
+│   ├── it should set the i itial price
+│   ├── it should set the floor price
+│   ├── it should set the duration
+│   ├── it should set the amount being sold
+│   ├── it should set the seller
+│   ├── it should transfer the token being sold to the contract, from the deployer
+│   └── it should e it an AuctionCreated event
+├── when passing an empty accepted token
+│   └── it should revert
+├── when passing an empty token being sold
+│   └── it should revert
+├── when passing a initial price of 0
+│   └── it should revert
+├── when passing a 0 duration
+│   └── it should revert
+├── when passing a amount of 0 being sold
+│   └── it should revert
+└── when passing an empty seller
+    └── it should revert
