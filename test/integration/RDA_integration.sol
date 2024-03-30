@@ -3,7 +3,7 @@ pragma solidity 0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
 import {ReverseDutchAuction, IERC20} from "../../src/ReverseDutchAuction.sol";
-import {IWETH9} from "./../interfaces/IWETH9.sol";
+import {IWETH9} from "./../lib/IWETH9.sol";
 
 contract RDA_Integration_forkTest is Test {
     IERC20 weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);

@@ -131,7 +131,7 @@ contract ReverseDutchAuction {
         ACCEPTED_TOKEN.transferFrom(msg.sender, SELLER, AMOUNT_SOLD * _proposedPrice);
         TOKEN_ALOTED.transfer(msg.sender, AMOUNT_SOLD);
 
-        emit AuctionSettled(msg.sender, ACCEPTED_TOKEN, TOKEN_ALOTED, AMOUNT_SOLD, _proposedPrice);
+        emit AuctionSettled(msg.sender, ACCEPTED_TOKEN, TOKEN_ALOTED, AMOUNT_SOLD, AMOUNT_SOLD * _proposedPrice);
 
         // Invariants: no token "lost" along the way
         uint256 balanceBuyerAfter = TOKEN_ALOTED.balanceOf(msg.sender);
