@@ -36,7 +36,7 @@ contract RDA_Handler is Test {
         IERC20 tokenAloted = target.TOKEN_ALOTED();
         address seller = target.SELLER();
 
-        deal(address(acceptedToken), msg.sender, priceOffered, true);
+        deal(address(acceptedToken), msg.sender, priceOffered * target.AMOUNT_SOLD(), true);
 
         vm.prank(msg.sender);
         acceptedToken.approve(address(target), priceOffered);
