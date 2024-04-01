@@ -4,7 +4,7 @@ pragma solidity 0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {ReverseDutchAuction, IERC20} from "../../src/ReverseDutchAuction.sol";
 
-/// @dev This handler will abstract the transferFrom approval away as well as 
+/// @dev This handler will abstract the transferFrom approval away as well as
 /// track the amounts in ghost variables
 contract RDA_Handler is Test {
     ReverseDutchAuction target;
@@ -13,11 +13,15 @@ contract RDA_Handler is Test {
     uint256 public ghost_balanceBuyerTokenAlotedBefore;
     uint256 public ghost_balanceSellerAcceptedTokenBefore;
     uint256 public ghost_balanceSellerTokenAlotedBefore;
+    uint256 public ghost_balanceContractAcceptedTokenBefore;
+    uint256 public ghost_balanceContractTokenAlotedBefore;
 
     uint256 public ghost_balanceBuyerAcceptedTokenAfter;
     uint256 public ghost_balanceBuyerTokenAlotedAfter;
     uint256 public ghost_balanceSellerAcceptedTokenAfter;
     uint256 public ghost_balanceSellerTokenAlotedAfter;
+    uint256 public ghost_balanceContractAcceptedTokenAfter;
+    uint256 public ghost_balanceContractTokenAlotedAfter;
 
     uint256 public ghost_priceUsed;
 
@@ -46,7 +50,9 @@ contract RDA_Handler is Test {
         ghost_balanceBuyerTokenAlotedBefore = tokenAloted.balanceOf(msg.sender);
         ghost_balanceSellerAcceptedTokenBefore = acceptedToken.balanceOf(seller);
         ghost_balanceSellerTokenAlotedBefore = tokenAloted.balanceOf(seller);
-        
+        ghost_balanceContractAcceptedTokenBefore = acceptedToken.balanceOf(address(target));
+        ghost_balanceContractTokenAlotedBefore = tokenAloted.balanceOf(address(target));
+
         // Action:
         vm.prank(msg.sender);
         target.bid(priceOffered);
@@ -56,6 +62,8 @@ contract RDA_Handler is Test {
         ghost_balanceBuyerTokenAlotedAfter = tokenAloted.balanceOf(msg.sender);
         ghost_balanceSellerAcceptedTokenAfter = acceptedToken.balanceOf(seller);
         ghost_balanceSellerTokenAlotedAfter = tokenAloted.balanceOf(seller);
+        ghost_balanceContractAcceptedTokenAfter = acceptedToken.balanceOf(address(target));
+        ghost_balanceContractTokenAlotedAfter = tokenAloted.balanceOf(address(target));
 
         // Actual price used
         ghost_priceUsed = priceOffered;

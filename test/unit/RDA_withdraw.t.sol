@@ -24,7 +24,7 @@ contract RDA_Withdraw_unitTests is Test, Utils {
         // Dummy values
         acceptedToken = IERC20(address(new MockERC20Mintable()));
         vm.label(address(acceptedToken), "acceptedToken");
-        
+
         // We need actual erc20's to satisfy the bid's invariants (no mock with different
         // results, like in smock for instance)
         tokenAloted = IERC20(address(new MockERC20Mintable()));
@@ -71,11 +71,7 @@ contract RDA_Withdraw_unitTests is Test, Utils {
         _auctionProgression = bound(_auctionProgression, duration + 1, type(uint128).max);
         vm.warp(block.timestamp + _auctionProgression);
 
-        mockExpectCall(
-            address(tokenAloted),
-            abi.encodeCall(IERC20.transfer, (seller, amountSold)),
-            abi.encode(true)
-        );
+        mockExpectCall(address(tokenAloted), abi.encodeCall(IERC20.transfer, (seller, amountSold)), abi.encode(true));
 
         target.withdrawExpiredAuction();
     }

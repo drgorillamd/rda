@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
-import { Utils } from "../lib/utils.sol";
+import {Utils} from "../lib/utils.sol";
 
 import {ReverseDutchAuction, IERC20} from "../../src/ReverseDutchAuction.sol";
 

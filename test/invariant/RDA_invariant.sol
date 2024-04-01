@@ -7,8 +7,11 @@ import {MockERC20Mintable} from "../lib/MockERC20Mintable.sol";
 import {IWETH9} from "./../lib/IWETH9.sol";
 import {RDA_Handler} from "./RDA_handler.sol";
 
-/// @notice The invariants which should hold are:
-
+/// @notice 
+/// "global balance conservation" invariants:
+/// - invOne: The global (buyer + seller + auction contract) alloted token balance should remain the same
+/// - invTwo: The global accepted token balance should remain the same
+///
 
 contract RDA_Invariant is Test {
     IERC20 acceptedToken = IERC20(address(new MockERC20Mintable()));
@@ -23,7 +26,6 @@ contract RDA_Invariant is Test {
     RDA_Handler handler;
 
     function setUp() public {
-
         address seller = makeAddr("seller");
 
         deal(address(tokenAloted), seller, amountSold, true);
@@ -52,7 +54,21 @@ contract RDA_Invariant is Test {
         targetContract(address(handler));
     }
 
-    function invariant_one() public {
-        vm.skip(true);
+    function invariant_invOne() public view {
+        assertEq(
+            handler.ghost_balanceBuyerAcceptedTokenBefore() + handler.ghost_balanceSellerAcceptedTokenBefore()
+                + handler.ghost_balanceContractAcceptedTokenBefore(),
+            handler.ghost_balanceBuyerAcceptedTokenAfter() + handler.ghost_balanceSellerAcceptedTokenAfter()
+                + handler.ghost_balanceContractAcceptedTokenAfter()
+        );
+    }
+
+    function invariant_invTwo() public view {
+        assertEq(
+            handler.ghost_balanceBuyerTokenAlotedBefore() + handler.ghost_balanceSellerTokenAlotedBefore()
+                + handler.ghost_balanceContractTokenAlotedBefore(),
+            handler.ghost_balanceBuyerTokenAlotedAfter() + handler.ghost_balanceSellerTokenAlotedAfter()
+                + handler.ghost_balanceContractTokenAlotedAfter()
+        );
     }
 }

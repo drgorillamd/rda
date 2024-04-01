@@ -36,7 +36,7 @@ contract RDA_Bid_unitTests is Test, Utils {
         // Dummy values
         acceptedToken = IERC20(address(new MockERC20Mintable()));
         vm.label(address(acceptedToken), "acceptedToken");
-        
+
         // We need actual erc20's to satisfy the bid's invariants (no mock with different
         // results, like in smock for instance)
         tokenAloted = IERC20(address(new MockERC20Mintable()));
@@ -104,7 +104,10 @@ contract RDA_Bid_unitTests is Test, Utils {
         assertTrue(target.auctionSettled());
     }
 
-    function test_RevertWhen_PassingAPriceLowerThanTheCurrentPrice(uint256 _bidPrice, uint256 _auctionProgression) external whenTheCurrentPriceIsAboveTheFloorPrice(_auctionProgression) {
+    function test_RevertWhen_PassingAPriceLowerThanTheCurrentPrice(uint256 _bidPrice, uint256 _auctionProgression)
+        external
+        whenTheCurrentPriceIsAboveTheFloorPrice(_auctionProgression)
+    {
         // current price is between the minimum accepted one, until uint248.max (to avoid overflowing on the price calculation)
         _bidPrice = bound(_bidPrice, 0, initialPrice - initialPrice * auctionProgression / duration - 1);
 
@@ -128,7 +131,10 @@ contract RDA_Bid_unitTests is Test, Utils {
         _;
     }
 
-    function test_WhenPassingAPriceAboveTheFloorPrice(uint256 _bidPrice, uint256 _progressionFuzzSeed) external whenTheCurrentPriceIsLessThanTheFloorPrice(_progressionFuzzSeed) {
+    function test_WhenPassingAPriceAboveTheFloorPrice(uint256 _bidPrice, uint256 _progressionFuzzSeed)
+        external
+        whenTheCurrentPriceIsLessThanTheFloorPrice(_progressionFuzzSeed)
+    {
         // current price is at least the minimum one
         _bidPrice = bound(_bidPrice, minPrice, initialPrice * 100);
 
@@ -154,7 +160,10 @@ contract RDA_Bid_unitTests is Test, Utils {
         assertEq(tokenAloted.balanceOf(address(this)), amountSold);
     }
 
-    function test_RevertWhen_PassingAPriceLessThanTheFloorPrice(uint256 _bidPrice, uint256 _progressionFuzzSeed) external whenTheCurrentPriceIsLessThanTheFloorPrice(_progressionFuzzSeed) {
+    function test_RevertWhen_PassingAPriceLessThanTheFloorPrice(uint256 _bidPrice, uint256 _progressionFuzzSeed)
+        external
+        whenTheCurrentPriceIsLessThanTheFloorPrice(_progressionFuzzSeed)
+    {
         // current price is bellow the minimum price
         _bidPrice = bound(_bidPrice, 0, minPrice - 1);
 
@@ -172,16 +181,13 @@ contract RDA_Bid_unitTests is Test, Utils {
 
     function test_RevertWhen_TryingToBidOnASettledAuction() external {
         // it should revert
-        stdstore
-            .target(address(target))
-            .sig("auctionSettled()")
-            .checked_write(true);
+        stdstore.target(address(target)).sig("auctionSettled()").checked_write(true);
 
         vm.expectRevert(ReverseDutchAuction.RDA_Bid_AuctionSettled.selector);
         target.bid(initialPrice);
     }
 
-    function test_RevertWhen_TryingToBidOnAnAuctionThatHasExpired(uint256 _auctionProgression) external {        
+    function test_RevertWhen_TryingToBidOnAnAuctionThatHasExpired(uint256 _auctionProgression) external {
         // fuzz until reaching the floor price, as we test when current > min
         _auctionProgression = bound(_auctionProgression, duration + 1, type(uint128).max);
 
