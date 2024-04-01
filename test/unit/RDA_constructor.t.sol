@@ -2,10 +2,11 @@
 pragma solidity 0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
+import { Utils } from "../lib/utils.sol";
 
 import {ReverseDutchAuction, IERC20} from "../../src/ReverseDutchAuction.sol";
 
-contract RDA_Constructor_unitTests is Test {
+contract RDA_Constructor_unitTests is Test, Utils {
     // Events to test
     event AuctionCreated(
         address indexed seller, IERC20 indexed acceptedToken, IERC20 indexed tokenAloted, uint256 amountAlotedSold
@@ -210,18 +211,5 @@ contract RDA_Constructor_unitTests is Test {
             _amountSold: _amountSold,
             _seller: _seller
         });
-    }
-
-    /////////////////////////////////////////////////////////////////////
-    //                      Internal test helpers                      //
-    /////////////////////////////////////////////////////////////////////
-
-    function assertEq(IERC20 a, IERC20 b) internal pure {
-        assertEq(address(a), address(b));
-    }
-
-    function mockExpectCall(address target, bytes memory callData, bytes memory returnedData) internal {
-        vm.mockCall(target, callData, returnedData);
-        vm.expectCall(target, callData);
     }
 }

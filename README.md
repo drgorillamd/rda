@@ -1,9 +1,25 @@
 # Simple reverse Dutch auction contract
 
-## RDA
+- sell a fixed amount of a set token (`alotedToken`) in exchange of a variable `acceptedToken`, following a reverse Dutch auction princing.
+- This contract is meant as a single-use contract (ie for a single auction), as most of the parameters are immutables.
+- Price is expressed as the amount of `acceptedToken` per `tokenAloted`.
+- There is a floor price, the current price being ma(floor price, current price) (optionnal, use 0 to not use it)
+- Auction will only run for an ampount of time, it will then revert afterward (aloted token withdraw is then allowed by the original seller)
+- `bid(..)` reverts if the auction has already been settled or has expired
+
 ## Tests
 ### Unit tests
-### Integration tests
-### Invariant tests
+Using bulloak, branched tests (fuzz strategy: cover the range of values which should be correct for the tested branch)
 
-wip
+### Integration tests
+Happy path, on a mainnet fork
+
+### Invariant tests
+wip - handler to expose `bid(..)` while capturing balances in ghost variables
+todo: add the actual invariants
+
+### Ityfuzz
+wip: constructor and rpc server
+
+## Style convention
+Base style-guide

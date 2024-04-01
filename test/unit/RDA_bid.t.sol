@@ -2,10 +2,11 @@
 pragma solidity 0.8.24;
 
 import {Test, console, stdStorage, StdStorage} from "forge-std/Test.sol";
+import {Utils} from "../lib/utils.sol";
 import {ReverseDutchAuction, IERC20} from "../../src/ReverseDutchAuction.sol";
 import {MockERC20Mintable} from "../lib/MockERC20Mintable.sol";
 
-contract RDA_Bid_unitTests is Test {
+contract RDA_Bid_unitTests is Test, Utils {
     using stdStorage for StdStorage;
 
     event AuctionSettled(
@@ -196,10 +197,5 @@ contract RDA_Bid_unitTests is Test {
 
         // Test: bid
         target.bid(_bidPrice);
-    }
-
-    function mockExpectCall(address _target, bytes memory callData, bytes memory returnedData) internal {
-        vm.mockCall(_target, callData, returnedData);
-        vm.expectCall(_target, callData);
     }
 }

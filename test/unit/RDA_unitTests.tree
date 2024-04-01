@@ -42,3 +42,10 @@ ReverseDutchAuction::Bid
 │   └── it should revert
 └── when trying to bid on an auction that has expired
     └── it should revert
+
+
+ReverseDutchAuction::Withdraw
+├── when the auction has not expired
+│   └── it should revert
+└── when the auction has expired
+    └── it should transfer the aloted token back to the seller

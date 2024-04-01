@@ -39,6 +39,8 @@ contract ReverseDutchAuction {
     error RDA_Bid_AuctionExpired();
     error RDA_Bid_AuctionSettled();
 
+    error RDA_Withdraw_AuctionNotExpired();
+
     /////////////////////////////////////////////////////////////////////
     //                        Public immutables                        //
     /////////////////////////////////////////////////////////////////////
@@ -108,7 +110,7 @@ contract ReverseDutchAuction {
     ///      from the correct amount (the contracts balance isn't contrained to be 0 after settlement, as
     ///      it would allow griefing by sending 1 extra token to the contract).
     /// @param _proposedPrice The price the buyer is willing to pay for the tokens
-    function bid(uint256 _proposedPrice) public {
+    function bid(uint256 _proposedPrice) external {
         // Function Requirements
         if (block.timestamp > AUCTION_STARTING_TIMESTAMP + AUCTION_DURATION) revert RDA_Bid_AuctionExpired();
         if (auctionSettled) revert RDA_Bid_AuctionSettled();
@@ -139,5 +141,13 @@ contract ReverseDutchAuction {
 
         uint256 balanceSellerAfter = ACCEPTED_TOKEN.balanceOf(SELLER);
         assert(balanceSellerAfter == balanceSellerBefore + AMOUNT_SOLD * _proposedPrice);
+    }
+
+    /// @notice Withdraw the tokens after the auction has expired
+    /// @dev The auction should have expired. The aloted token are transfered back to the original seller,
+    function withdrawExpiredAuction() external {
+        if (block.timestamp <= AUCTION_STARTING_TIMESTAMP + AUCTION_DURATION) revert RDA_Withdraw_AuctionNotExpired();
+
+        TOKEN_ALOTED.transfer(SELLER, AMOUNT_SOLD);
     }
 }
