@@ -38,13 +38,13 @@ contract RDA_Integration_forkTest is Test {
         arb.approve(nextDeploymentAddress, amountSold);
 
         target = new ReverseDutchAuction({
-            _acceptedToken: weth,
-            _tokenAloted: arb,
-            _initialPrice: initialPrice,
-            _minPrice: minPrice,
-            _duration: duration,
-            _amountSold: amountSold,
-            _seller: seller
+            acceptedToken: weth,
+            tokenAloted: arb,
+            initialPrice: initialPrice,
+            minPrice: minPrice,
+            duration: duration,
+            amountSold: amountSold,
+            seller: seller
         });
 
         vm.stopPrank();

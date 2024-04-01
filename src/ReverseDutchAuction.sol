@@ -66,36 +66,45 @@ contract ReverseDutchAuction {
     //                           Constructor                           //
     /////////////////////////////////////////////////////////////////////
 
+    /// @notice Instantiate a new Reverse Dutch Auction
+    /// @dev Transfers the amount of tokens to be sold from the deployer to the contract (requires approval) and emits an AuctionCreated event
+    /// @param acceptedToken The token accepted as payment in the auction
+    /// @param tokenAloted The token being sold in the auction
+    /// @param initialPrice The starting price of the auction
+    /// @param minPrice The minimum price of the auction (can be 0 if no floor)
+    /// @param duration The duration of the auction in seconds
+    /// @param amountSold The total amount of tokens to be sold (this amount will be transfered from the deployer to the contract)
+    /// @param seller The address of the seller, which will receive the proceed of the auction
     constructor(
-        IERC20 _acceptedToken,
-        IERC20 _tokenAloted,
-        uint256 _initialPrice,
-        uint256 _minPrice,
-        uint256 _duration,
-        uint256 _amountSold,
-        address _seller
+        IERC20 acceptedToken,
+        IERC20 tokenAloted,
+        uint256 initialPrice,
+        uint256 minPrice,
+        uint256 duration,
+        uint256 amountSold,
+        address seller
     ) {
         // Checks/function requirements
-        if (address(_acceptedToken) == address(0)) revert RDA_Constructor_WrongTokenIn();
-        if (address(_tokenAloted) == address(0)) revert RDA_Constructor_WrongTokenOut();
-        if (_initialPrice == 0) revert RDA_Constructor_InitialPriceZero();
-        if (_duration == 0) revert RDA_Constructor_DurationZero();
-        if (_amountSold == 0) revert RDA_Constructor_AmountSoldZero();
-        if (_seller == address(0)) revert RDA_Constructor_SellerZero();
+        if (address(acceptedToken) == address(0)) revert RDA_Constructor_WrongTokenIn();
+        if (address(tokenAloted) == address(0)) revert RDA_Constructor_WrongTokenOut();
+        if (initialPrice == 0) revert RDA_Constructor_InitialPriceZero();
+        if (duration == 0) revert RDA_Constructor_DurationZero();
+        if (amountSold == 0) revert RDA_Constructor_AmountSoldZero();
+        if (seller == address(0)) revert RDA_Constructor_SellerZero();
 
         // Effects
-        ACCEPTED_TOKEN = _acceptedToken;
-        TOKEN_ALOTED = _tokenAloted;
-        INITIAL_PRICE = _initialPrice;
-        MIN_PRICE = _minPrice;
-        AMOUNT_SOLD = _amountSold;
-        SELLER = _seller;
+        ACCEPTED_TOKEN = acceptedToken;
+        TOKEN_ALOTED = tokenAloted;
+        INITIAL_PRICE = initialPrice;
+        MIN_PRICE = minPrice;
+        AMOUNT_SOLD = amountSold;
+        SELLER = seller;
         AUCTION_STARTING_TIMESTAMP = block.timestamp;
-        AUCTION_DURATION = _duration;
+        AUCTION_DURATION = duration;
 
         // Interactions
-        _tokenAloted.transferFrom(msg.sender, address(this), _amountSold);
-        emit AuctionCreated(_seller, _acceptedToken, _tokenAloted, _amountSold);
+        tokenAloted.transferFrom(msg.sender, address(this), amountSold);
+        emit AuctionCreated(seller, acceptedToken, tokenAloted, amountSold);
     }
 
     /////////////////////////////////////////////////////////////////////
@@ -109,8 +118,8 @@ contract ReverseDutchAuction {
     ///      The buyer and the seller balances are constraint to be increasing/decreasing
     ///      from the correct amount (the contracts balance isn't contrained to be 0 after settlement, as
     ///      it would allow griefing by sending 1 extra token to the contract).
-    /// @param _proposedPrice The price the buyer is willing to pay for the tokens
-    function bid(uint256 _proposedPrice) external {
+    /// @param proposedPrice The price the buyer is willing to pay for the tokens
+    function bid(uint256 proposedPrice) external {
         // Function Requirements
         if (block.timestamp > AUCTION_STARTING_TIMESTAMP + AUCTION_DURATION) revert RDA_Bid_AuctionExpired();
         if (auctionSettled) revert RDA_Bid_AuctionSettled();
@@ -125,22 +134,22 @@ contract ReverseDutchAuction {
         // Take the floor price into account
         currentPrice = currentPrice < MIN_PRICE ? MIN_PRICE : currentPrice;
 
-        if (_proposedPrice < currentPrice) revert RDA_Bid_BidPriceTooLow();
+        if (proposedPrice < currentPrice) revert RDA_Bid_BidPriceTooLow();
 
         auctionSettled = true;
 
         // Interactons
-        ACCEPTED_TOKEN.transferFrom(msg.sender, SELLER, AMOUNT_SOLD * _proposedPrice);
+        ACCEPTED_TOKEN.transferFrom(msg.sender, SELLER, AMOUNT_SOLD * proposedPrice);
         TOKEN_ALOTED.transfer(msg.sender, AMOUNT_SOLD);
 
-        emit AuctionSettled(msg.sender, ACCEPTED_TOKEN, TOKEN_ALOTED, AMOUNT_SOLD, AMOUNT_SOLD * _proposedPrice);
+        emit AuctionSettled(msg.sender, ACCEPTED_TOKEN, TOKEN_ALOTED, AMOUNT_SOLD, AMOUNT_SOLD * proposedPrice);
 
         // Invariants: no token "lost" along the way
         uint256 balanceBuyerAfter = TOKEN_ALOTED.balanceOf(msg.sender);
         assert(balanceBuyerAfter == balanceBuyerBefore + AMOUNT_SOLD);
 
         uint256 balanceSellerAfter = ACCEPTED_TOKEN.balanceOf(SELLER);
-        assert(balanceSellerAfter == balanceSellerBefore + AMOUNT_SOLD * _proposedPrice);
+        assert(balanceSellerAfter == balanceSellerBefore + AMOUNT_SOLD * proposedPrice);
     }
 
     /// @notice Withdraw the tokens after the auction has expired

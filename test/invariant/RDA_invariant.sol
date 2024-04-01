@@ -11,7 +11,6 @@ import {RDA_Handler} from "./RDA_handler.sol";
 /// "global balance conservation" invariants:
 /// - invOne: The global (buyer + seller + auction contract) alloted token balance should remain the same
 /// - invTwo: The global accepted token balance should remain the same
-///
 
 contract RDA_Invariant is Test {
     IERC20 acceptedToken = IERC20(address(new MockERC20Mintable()));
@@ -38,13 +37,13 @@ contract RDA_Invariant is Test {
         tokenAloted.approve(nextDeploymentAddress, amountSold);
 
         target = new ReverseDutchAuction({
-            _acceptedToken: acceptedToken,
-            _tokenAloted: tokenAloted,
-            _initialPrice: initialPrice,
-            _minPrice: minPrice,
-            _duration: duration,
-            _amountSold: amountSold,
-            _seller: seller
+            acceptedToken: acceptedToken,
+            tokenAloted: tokenAloted,
+            initialPrice: initialPrice,
+            minPrice: minPrice,
+            duration: duration,
+            amountSold: amountSold,
+            seller: seller
         });
 
         vm.stopPrank();

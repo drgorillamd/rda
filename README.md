@@ -16,10 +16,11 @@ Happy path, on a mainnet fork
 
 ### Invariant tests
 wip - handler to expose `bid(..)` while capturing balances in ghost variables
-todo: add the actual invariants
+2 invariants for now: balance conservation of alotedToken and tokenAccepted
+This is a Foundry invariant test, so basically fuzzing on steroid -> would be more interesting to include sym exec (solc builtin/smt or third-party)
 
 ### Ityfuzz
 wip: constructor and rpc server
 
 ## Style convention
-Base style-guide
+Solidity style-guide

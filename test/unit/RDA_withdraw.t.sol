@@ -45,13 +45,13 @@ contract RDA_Withdraw_unitTests is Test, Utils {
 
         // deploy the contract
         target = new ReverseDutchAuction({
-            _acceptedToken: acceptedToken,
-            _tokenAloted: tokenAloted,
-            _initialPrice: initialPrice,
-            _minPrice: minPrice,
-            _duration: duration,
-            _amountSold: amountSold,
-            _seller: seller
+            acceptedToken: acceptedToken,
+            tokenAloted: tokenAloted,
+            initialPrice: initialPrice,
+            minPrice: minPrice,
+            duration: duration,
+            amountSold: amountSold,
+            seller: seller
         });
     }
 
