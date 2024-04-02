@@ -15,12 +15,16 @@ Using bulloak, branched tests (fuzz strategy: cover the range of values which sh
 Happy path, on a mainnet fork
 
 ### Invariant tests
-wip - handler to expose `bid(..)` while capturing balances in ghost variables
 2 invariants for now: balance conservation of alotedToken and tokenAccepted
 This is a Foundry invariant test, so basically fuzzing on steroid -> would be more interesting to include sym exec (solc builtin/smt or third-party)
 
 ### Ityfuzz
 wip: constructor and rpc server
+
+### Z3 / Eldarica
+`docker build -t solc-z3 --platform=linux/amd64 .`
+
+`docker run -v $(pwd):$(pwd) -w $(pwd) solc-z3 {YOUR_COMMAND}`
 
 ## Style convention
 Solidity style-guide
