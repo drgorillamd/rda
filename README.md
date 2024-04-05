@@ -1,5 +1,7 @@
 # Simple reverse Dutch auction contract
 
+- This repo is to keep a collection of testing tool "recipes" - I'll add more setup as, well, I find them
+
 - sell a fixed amount of a set token (`alotedToken`) in exchange of a variable `acceptedToken`, following a reverse Dutch auction princing.
 - This contract is meant as a single-use contract (ie for a single auction), as most of the parameters are immutables.
 - Price is expressed as the amount of `acceptedToken` per `tokenAloted`.
@@ -29,6 +31,12 @@ For now, need to build the image (might take some time for z3 to compile):
 
 todo: z3 precompiles available?
 todo: add a shell script to run the smtchecker on the rda contract (both z3 and eldarica)
+
+### Halmos
+
+### Certora: mutation test (Gambit), Prover 
+
+### Consensys Diligence tools (free?)
 
 ## Style convention
 Solidity style-guide
