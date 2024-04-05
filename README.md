@@ -19,12 +19,16 @@ Happy path, on a mainnet fork
 This is a Foundry invariant test, so basically fuzzing on steroid -> would be more interesting to include sym exec (solc builtin/smt or third-party)
 
 ### Ityfuzz
-wip: constructor and rpc server
+todo: constructor and rpc server
 
 ### Z3 / Eldarica
+For now, need to build the image (might take some time for z3 to compile):
 `docker build -t solc-z3 --platform=linux/amd64 .`
 
-`docker run -v $(pwd):$(pwd) -w $(pwd) solc-z3 {YOUR_COMMAND}`
+`docker run --platform=linux/amd64 -v $(pwd):$(pwd) -w $(pwd) solc-z3 {YOUR_COMMAND}`
+
+todo: z3 precompiles available?
+todo: add a shell script to run the smtchecker on the rda contract (both z3 and eldarica)
 
 ## Style convention
 Solidity style-guide
