@@ -38,5 +38,7 @@ todo: add a shell script to run the smtchecker on the rda contract (both z3 and 
 
 ### Consensys Diligence tools (free?)
 
+### Kontrol
+
 ## Style convention
 Solidity style-guide

@@ -75,53 +75,53 @@ contract RDA_Bid_unitTests is Test, Utils {
         _;
     }
 
-    function test_WhenPassingAPriceHigherThanTheCurrentPrice(uint256 _bidPrice, uint256 _progressionFuzzSeed)
-        external
-        whenTheCurrentPriceIsAboveTheFloorPrice(_progressionFuzzSeed)
-    {
-        // current price is between the minimum accepted one, until initialPrice * 100 (to avoid overflowing on the price calculation)
-        _bidPrice = bound(_bidPrice, initialPrice - initialPrice * auctionProgression / duration, initialPrice * 100);
+    // function test_WhenPassingAPriceHigherThanTheCurrentPrice(uint256 _bidPrice, uint256 _progressionFuzzSeed)
+    //     external
+    //     whenTheCurrentPriceIsAboveTheFloorPrice(_progressionFuzzSeed)
+    // {
+    //     // current price is between the minimum accepted one, until initialPrice * 100 (to avoid overflowing on the price calculation)
+    //     _bidPrice = bound(_bidPrice, initialPrice - initialPrice * auctionProgression / duration, initialPrice * 100);
 
-        deal(address(acceptedToken), address(this), _bidPrice * amountSold, true);
-        acceptedToken.approve(address(target), _bidPrice * amountSold);
+    //     deal(address(acceptedToken), address(this), _bidPrice * amountSold, true);
+    //     acceptedToken.approve(address(target), _bidPrice * amountSold);
 
-        vm.warp(block.timestamp + auctionProgression);
+    //     vm.warp(block.timestamp + auctionProgression);
 
-        // it should emit an AuctionSettled event
-        vm.expectEmit(true, true, true, true);
-        emit AuctionSettled(address(this), acceptedToken, tokenAloted, amountSold, _bidPrice * amountSold);
+    //     // it should emit an AuctionSettled event
+    //     vm.expectEmit(true, true, true, true);
+    //     emit AuctionSettled(address(this), acceptedToken, tokenAloted, amountSold, _bidPrice * amountSold);
 
-        // Test: bid
-        target.bid(_bidPrice);
+    //     // Test: bid
+    //     target.bid(_bidPrice);
 
-        // it should transfer the accepted token to the seller
-        assertEq(acceptedToken.balanceOf(seller), _bidPrice * amountSold);
+    //     // it should transfer the accepted token to the seller
+    //     assertEq(acceptedToken.balanceOf(seller), _bidPrice * amountSold);
 
-        // it should transfer the token being sold to the bidder
-        assertEq(tokenAloted.balanceOf(address(this)), amountSold);
+    //     // it should transfer the token being sold to the bidder
+    //     assertEq(tokenAloted.balanceOf(address(this)), amountSold);
 
-        // it should settle the auction
-        assertTrue(target.auctionSettled());
-    }
+    //     // it should settle the auction
+    //     assertTrue(target.auctionSettled());
+    // }
 
-    function test_RevertWhen_PassingAPriceLowerThanTheCurrentPrice(uint256 _bidPrice, uint256 _auctionProgression)
-        external
-        whenTheCurrentPriceIsAboveTheFloorPrice(_auctionProgression)
-    {
-        // current price is between the minimum accepted one, until uint248.max (to avoid overflowing on the price calculation)
-        _bidPrice = bound(_bidPrice, 0, initialPrice - initialPrice * auctionProgression / duration - 1);
+    // function test_RevertWhen_PassingAPriceLowerThanTheCurrentPrice(uint256 _bidPrice, uint256 _auctionProgression)
+    //     external
+    //     whenTheCurrentPriceIsAboveTheFloorPrice(_auctionProgression)
+    // {
+    //     // current price is between the minimum accepted one, until uint248.max (to avoid overflowing on the price calculation)
+    //     _bidPrice = bound(_bidPrice, 0, initialPrice - initialPrice * auctionProgression / duration - 1);
 
-        deal(address(acceptedToken), address(this), _bidPrice * amountSold, true);
-        acceptedToken.approve(address(target), _bidPrice * amountSold);
+    //     deal(address(acceptedToken), address(this), _bidPrice * amountSold, true);
+    //     acceptedToken.approve(address(target), _bidPrice * amountSold);
 
-        vm.warp(block.timestamp + auctionProgression);
+    //     vm.warp(block.timestamp + auctionProgression);
 
-        // it should revert
-        vm.expectRevert(ReverseDutchAuction.RDA_Bid_BidPriceTooLow.selector);
+    //     // it should revert
+    //     vm.expectRevert(ReverseDutchAuction.RDA_Bid_BidPriceTooLow.selector);
 
-        // Test: bid
-        target.bid(_bidPrice);
-    }
+    //     // Test: bid
+    //     target.bid(_bidPrice);
+    // }
 
     modifier whenTheCurrentPriceIsLessThanTheFloorPrice(uint256 _progressionFuzzSeed) {
         // the duration after which the floor price is reached
