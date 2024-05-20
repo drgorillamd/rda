@@ -31,7 +31,8 @@ jobs:
         run: forge coverage --report summary --report lcov
 
       - name: Setup LCOV
-        uses: hrishikesh-kadam/setup-lcov@v1
+        run: sudo apt-get -y install lcov
+        shell: bash
 
       - name: Filter directories
         run: lcov --remove lcov.info 'test/*' 'script/*' --output-file lcovNew.info --rc branch_coverage=1 --rc derive_function_end_line=0 --ignore-errors unused
