@@ -31,16 +31,10 @@ jobs:
         run: forge coverage --report summary --report lcov
 
       - name: Setup LCOV
-        run: |
-            wget https://github.com/linux-test-project/lcov/releases/download/v2.1/lcov-2.1.tar.gz
-            tar -xvf lcov-2.1.tar.gz
-            perl -MCPAN -e 'install Capture::Tiny'
-            sudo make -C lcov-2.1 install
-            lcov --version
-        shell: bash
+        uses: hrishikesh-kadam/setup-lcov@v1
 
       - name: Filter directories
-        run: lcov --remove lcov.info 'test/*' 'script/*' --output-file lcovNew.info --rc branch_coverage=1 --rc derive_function_end_line=0 --ignore-errors unused
+        run: lcov --remove lcov.info 'test/*' 'script/*' --output-file lcovNew.info --rc lcov_branch_coverage=1 --rc derive_function_end_line=0 --ignore-errors unused
 
       - name: Capture coverage output
         id: new-coverage
